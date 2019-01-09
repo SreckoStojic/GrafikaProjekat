@@ -154,7 +154,6 @@ namespace PF1S14_1
                 case Key.P:
                     {
                         m_world.index = 0;
-
                         m_world.Regler(); break;
                     }
             }
@@ -258,7 +257,6 @@ namespace PF1S14_1
             if(m_world != null)
             {
                 m_world.index = 0;
-
                 m_world.Regler();
             }
         }

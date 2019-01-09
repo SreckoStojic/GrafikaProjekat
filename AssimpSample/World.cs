@@ -62,17 +62,9 @@ namespace PF1S14_1
         private readonly int m_textureCount = Enum.GetNames(typeof(TextureObjects)).Length;        private uint[] m_textures = null;        private TextureFilterMode m_selectedMode = TextureFilterMode.LinearMipmapLinear;
         private string[] m_textureFiles = { "..//..//images//zid.jpg", "..//..//images//pod2.jpg" };
 
-        public OpenGL gl;        public float scaleCandleSphere = 1;        public float rotateCandle = 0;        public float red_diffuse = 1;        public float green_diffuse = 0.4f;        public float blue_diffuse = 0.15f;        public Boolean light0 = true;        public Boolean light1 = true;        private LookAtCamera lookAtCam;
-        //Pomocni vektori preko kojih definisemo lookAt funkciju
-        private Vertex direction;
-        private Vertex right;
-        private Vertex up;
-
-        
-        public float xx = -90f;
-        
+        public OpenGL gl;        public float scaleCandleSphere = 1;        public float rotateCandle = 0;        public float red_diffuse = 1;        public float green_diffuse = 0.4f;        public float blue_diffuse = 0.15f;        public Boolean light0 = true;        public Boolean light1 = true;  
+        public float xx = -110f;        
         public float yy = 60f;
-        
         public float zz = -10f;
         
         public Boolean perspectiveFPS = false;
@@ -83,19 +75,34 @@ namespace PF1S14_1
         public float xCenter = 0;
         public float zCenter = 0;
 
-        public float xCandle = -90;
+        public float xCandle = -110;
         public float yCandle = 32;
-        public float zCandle = 40;
+        public float zCandle = 60;
 
         public int axis;
         public int directionSmer;
-        
+        /*staro
         public Vertex[] points = {
             new Vertex(-90, 60, -20),
             new Vertex(-90, 60, 150),
             new Vertex( 20, 60, 150),
             new Vertex( 20, 60, -150),
             new Vertex( 120, 60, -150)
+        };*/
+        //novo
+        public Vertex[] points = {
+            new Vertex(-110, 60, -20),
+            new Vertex(-110, 60, 150),
+            new Vertex(125, 60, 150),
+            new Vertex(125, 60, -40),
+            new Vertex(50, 60, -40),
+            new Vertex(50, 60, 110),
+            new Vertex(-10, 60, 110),
+            new Vertex(-10, 60, -50),
+            new Vertex(-150, 60, -50),
+            new Vertex(-150, 60, -150),
+            new Vertex(140, 60, -150),
+            new Vertex(140, 60, -110)
         };
 
         public Vertex nextPoint, currentPoint;
@@ -183,7 +190,7 @@ namespace PF1S14_1
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.LoadIdentity();
             
-            gl.Perspective(50, (float)m_width / m_height, 1, 2000);
+            gl.Perspective(50, (float)m_width / m_height, 1, 2500);
             gl.Viewport(0, 0, m_width, m_height);
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
         }
@@ -215,7 +222,7 @@ namespace PF1S14_1
                 gl.Disable(OpenGL.GL_LIGHT0);
             }
 
-            float[] light1pos = new float[] { -90.0f, 0.0f, 40.0f, 1.0f };
+            float[] light1pos = new float[] { xCandle, yCandle + 29, zCandle, 1.0f };
             float[] light1diffuse = new float[] { red_diffuse, green_diffuse, blue_diffuse, 1.0f };
             float[] light1ambient = new float[] { 1f, 0.4f, 0.15f, 1.0f };
             float[] light1specular = new float[] { 1f, 0.4f, 0.15f, 1.0f };
@@ -312,8 +319,8 @@ namespace PF1S14_1
             sphereLamp.CreateInContext(gl);
             sphereLamp.Radius = 0.5f;
             gl.Color(Color.Yellow);
-            gl.Translate(0, 250, 0);
-            gl.Scale(15, 15, 15);
+            gl.Translate(0, 300, 0);
+            gl.Scale(20, 20, 20);
             sphereLamp.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
             gl.PopMatrix();
 
@@ -325,7 +332,7 @@ namespace PF1S14_1
             //cylinder
             gl.PushMatrix();
             cil = new Cylinder();
-            gl.Translate(-90, 0, 40);
+            gl.Translate(-110, 0, 60);
             gl.Rotate(-90f, 0f, 0f);
             gl.Scale(30, 30, 30);
             cil.TopRadius = 0;
@@ -337,7 +344,7 @@ namespace PF1S14_1
             //cylinder 2
             gl.PushMatrix();
             cil = new Cylinder();
-            gl.Translate(120, 0, -150);
+            gl.Translate(140, 0, -110);
             gl.Rotate(-90f, 0f, 0f);
             gl.Scale(20, 30, 30);
             cil.TopRadius = 0;
@@ -352,6 +359,7 @@ namespace PF1S14_1
             //backing
             gl.PushMatrix();
             gl.Enable(OpenGL.GL_TEXTURE_2D);
+            gl.TexEnv(OpenGL.GL_TEXTURE_ENV, OpenGL.GL_TEXTURE_ENV_MODE, OpenGL.GL_MODULATE);
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Pod]);
             gl.Begin(OpenGL.GL_QUADS);
             gl.TexCoord(0.0f, 0.0f);
@@ -378,58 +386,86 @@ namespace PF1S14_1
             cube = new Cube();
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Zid]);
-            gl.Translate(180, 25, -2);
-            gl.Scale(5, 25, 182.5);
+            gl.Translate(180, 45, -2);
+            gl.Scale(5, 45, 182.5);
             cube.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
             gl.PopMatrix();
 
             //desni mali zid - desna soba
             gl.PushMatrix();
             cube = new Cube();
-            gl.Translate(80, 25, -95);
-            gl.Scale(5, 25, 20);
+            gl.Translate(80, 45, -95);
+            gl.Scale(5, 45, 20);
+            cube.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
+            gl.PopMatrix();
+
+            gl.PushMatrix();
+            cube = new Cube();
+            gl.Translate(80, 45, 60);
+            gl.Scale(5, 45, 70);
+            cube.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
+            gl.PopMatrix();
+
+            gl.PushMatrix();
+            cube = new Cube();
+            gl.Translate(20, 45, -20);
+            gl.Scale(5, 45, 90);
             cube.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
             gl.PopMatrix();
 
             //left wall
             gl.PushMatrix();
-            gl.Translate(-180, 25, -2);
-            gl.Scale(5, 25, 182.5);
+            gl.Translate(-180, 45, -2);
+            gl.Scale(5, 45, 182.5);
             cube.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
             gl.PopMatrix();
 
             //drugi levi - leva sobe
             gl.PushMatrix();
-            gl.Translate(-40, 25, 60);
-            gl.Scale(5, 25, 70);
+            gl.Translate(-40, 45, 60);
+            gl.Scale(5, 45, 70);
             cube.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
             gl.PopMatrix();
 
             //back wall
             gl.PushMatrix();
-            gl.Translate(2, 25, 180);
-            gl.Scale(182.5, 25, 5);
+            gl.Translate(2, 45, 180);
+            gl.Scale(182.5, 45, 5);
             cube.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
             gl.PopMatrix();
 
             //zadnji - leva soba
             gl.PushMatrix();
-            gl.Translate(-110, 25, -5);
-            gl.Scale(70, 25, 5);
+            gl.Translate(-110, 45, -5);
+            gl.Scale(70, 45, 5);
             cube.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
             gl.PopMatrix();
 
+            
+
             //zadnji - desna soba
             gl.PushMatrix();
-            gl.Translate(130, 25, -80);
-            gl.Scale(50, 25, 5);
+            gl.Translate(130, 45, -80);
+            gl.Scale(50, 45, 5);
             cube.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
             gl.PopMatrix();
 
             //front wall
             gl.PushMatrix();
-            gl.Translate(2, 25, -180);
-            gl.Scale(182.5, 25, 5);
+            gl.Translate(2, 45, -180);
+            gl.Scale(182.5, 45, 5);
+            cube.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
+            gl.PopMatrix();
+
+            gl.PushMatrix();
+            gl.Translate(-18, 45, -110);
+            gl.Scale(100, 45, 5);
+            cube.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
+            gl.PopMatrix();
+
+            gl.PushMatrix();
+            gl.Translate(20, 45, 130);
+            gl.Scale(65, 45, 5);
             cube.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
             gl.PopMatrix();
             gl.Disable(OpenGL.GL_TEXTURE_2D);
@@ -540,6 +576,7 @@ namespace PF1S14_1
                 }
             }
 
+            SetupLighting(gl);
         }
 
         protected void loadNext()
